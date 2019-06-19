@@ -8,7 +8,11 @@
  *
  * @author omandotkom
  */
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -83,6 +87,18 @@ public class Main {
         try {
             socket.connect(isa, TIMEOUT);
             msg("Berhasil terhubung.");
+
+            //persiapan mengirim data
+            OutputStream outputStream = socket.getOutputStream();
+            DataOutputStream dos = new DataOutputStream(outputStream);
+
+            //mengirim data
+            msg("Mengirim string...");
+            dos.writeUTF(packet);
+            dos.flush();
+            dos.close();
+            msg("Selesai mengirim string.");
+            socket.close();
         } catch (IOException ex) {
             msg(ex.getMessage());
         }
@@ -93,7 +109,15 @@ public class Main {
             msg("Server mode listening on " + getCurrentEnvironmentNetworkIp() + ":" + PORT);
             String ip = getCurrentEnvironmentNetworkIp();
             ServerSocket serverSocket = new ServerSocket(PORT);
-            serverSocket.accept();
+            Socket socket = serverSocket.accept();
+            InputStream inputStream = socket.getInputStream();
+            DataInputStream dataInputStream = new DataInputStream(inputStream);
+            String packet = dataInputStream.readUTF();
+            msg("String diterima");
+            msg("String     : " + packet.substring(0, 10) + "..." + packet.substring(packet.length() - 10, packet.length()));
+            msg("Panjang    : " + packet.length());
+            socket.close();
+            serverSocket.close();
         } catch (IOException ex) {
             msg(ex.getMessage());
         }
