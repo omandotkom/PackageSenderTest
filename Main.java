@@ -19,7 +19,7 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.util.*;
 public class Main {
 
     private final int PORT = 15049;
@@ -72,7 +72,8 @@ public class Main {
         msg("String     : " + packet.substring(0, 10) + "..." + packet.substring(packet.length() - 10, packet.length()));
         msg("Panjang    : " + packet.length());
         System.out.print("IP Server  : ");
-        String ip = System.console().readLine();
+	Scanner in = new Scanner(System.in);        
+	String ip = in.next();
         msg("Menyambungkan ke " + ip + ":" + PORT + " T/O : " + TIMEOUT / 1000 + " detik");
         //bikin objek socket connector baru
         Socket socket = new Socket();
